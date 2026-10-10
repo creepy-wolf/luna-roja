@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luna Roja · Herbolario Artesanal</title>
+  <meta name="description" content="Luna Roja, herbolario artesanal: infusiones, ungüentos y tinturas elaboradas con plantas recolectadas de forma ética y sabiduría botánica ancestral." />
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind + Lucide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            lino:   '#F9F6F0',
+            crema:  '#F5F2EB',
+            arena:  '#EDE7DB',
+            tarjeta:'#FBF9F4',
+            carbon: '#2D2A26',
+            lavanda:{ DEFAULT: '#9F86C0', soft: '#B5A4CB', deep: '#7C6499', mist: '#E6DFF0' },
+            salvia: { DEFAULT: '#8A9A7B', soft: '#C9D3BF', deep: '#5F6E52' },
+            terracota: { DEFAULT: '#B8704F', soft: '#E3C2B0' },
+          },
+          boxShadow: {
+            suave: '0 10px 40px -12px rgba(45,42,38,0.18)',
+            lift:  '0 22px 50px -16px rgba(124,100,153,0.35)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { -webkit-font-smoothing: antialiased; }
+    body { background-color: #F9F6F0; color: #2D2A26; }
+    ::selection { background: #B5A4CB; color: #2D2A26; }
+
+    /* Textura de lino muy sutil */
+    .linen {
+      background-image:
+        radial-gradient(rgba(45,42,38,0.035) 1px, transparent 1px),
+        radial-gradient(rgba(45,42,38,0.025) 1px, transparent 1px);
+      background-size: 22px 22px, 11px 11px;
+      background-position: 0 0, 5px 5px;
+    }
+
+    /* Revelado al hacer scroll */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .delay-1 { transition-delay: .12s; } .delay-2 { transition-delay: .24s; } .delay-3 { transition-delay: .36s; }
+
+    /* Flotación suave */
+    @keyframes floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+    .floaty { animation: floaty 7s ease-in-out infinite; }
+    @keyframes slowspin { to { transform: rotate(360deg) } }
+    .slowspin { animation: slowspin 60s linear infinite; }
+
+    /* Enlaces con subrayado animado */
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; left: 0; bottom: -4px; height: 1.5px; width: 0;
+      background: #9F86C0; transition: width .3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Zoom en imágenes de tarjetas */
+    .zoom-img img { transition: transform .8s ease; }
+    .group:hover .zoom-img img { transform: scale(1.06); }
+
+    /* Acordeón */
+    .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+    .faq-item.open .faq-body { grid-template-rows: 1fr; }
+    .faq-body > div { overflow: hidden; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    /* Menú móvil */
+    #mobile-menu { max-height: 0; opacity: 0; transition: max-height .45s ease, opacity .3s ease; overflow: hidden; }
+    #mobile-menu.open { max-height: 480px; opacity: 1; }
+
+    /* Fondo degradado de respaldo si falla una imagen */
+    .img-fallback { background: linear-gradient(135deg, #E6DFF0 0%, #C9D3BF 55%, #E3C2B0 100%); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body class="font-sans font-light leading-relaxed linen">
+
+  <!-- ============ HEADER ============ -->
+  <header id="header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <nav class="mt-3 flex items-center justify-between rounded-full px-5 sm:px-7 py-3 backdrop-blur-md bg-lino/80 border border-arena shadow-suave">
+        <a href="#inicio" class="flex items-center gap-2.5" aria-label="Luna Roja, inicio">
+          <span class="relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-terracota-soft/70">
+            <i data-lucide="moon" class="h-5 w-5 text-terracota"></i>
+          </span>
+          <span class="font-serif text-xl sm:text-2xl font-medium tracking-wide">Luna <span class="italic text-terracota">Roja</span></span>
+        </a>
+
+        <ul class="hidden lg:flex items-center gap-9 text-sm font-medium">
+          <li><a href="#inicio" class="nav-link">Inicio</a></li>
+          <li><a href="#remedios" class="nav-link">Remedios</a></li>
+          <li><a href="#filosofia" class="nav-link">Filosofía</a></li>
+          <li><a href="#talleres" class="nav-link">Talleres</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+        </ul>
+
+        <div class="flex items-center gap-3">
+          <a href="#contacto" class="hidden sm:inline-flex items-center gap-2 rounded-full bg-lavanda-deep px-5 py-2.5 text-sm font-medium text-lino transition hover:bg-lavanda hover:shadow-lift hover:-translate-y-0.5">
+            <i data-lucide="map-pin" class="h-4 w-4"></i> Visítanos / Pedidos
+          </a>
+          <button id="menu-btn" class="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full bg-lavanda-mist text-lavanda-deep transition hover:bg-lavanda-soft" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+            <i data-lucide="menu" id="icon-open" class="h-5 w-5"></i>
+            <i data-lucide="x" id="icon-close" class="h-5 w-5 hidden"></i>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Menú móvil -->
+      <div id="mobile-menu" class="lg:hidden mt-2 rounded-3xl bg-lino/95 backdrop-blur-md border border-arena shadow-suave">
+        <ul class="flex flex-col p-4 text-base">
+          <li><a href="#inicio" class="mobile-link block rounded-2xl px-4 py-3 hover:bg-lavanda-mist transition">Inicio</a></li>
+          <li><a href="#remedios" class="mobile-link block rounded-2xl px-4 py-3 hover:bg-lavanda-mist transition">Remedios</a></li>
+          <li><a href="#filosofia" class="mobile-link block rounded-2xl px-4 py-3 hover:bg-lavanda-mist transition">Filosofía</a></li>
+          <li><a href="#talleres" class="mobile-link block rounded-2xl px-4 py-3 hover:bg-lavanda-mist transition">Talleres</a></li>
+          <li><a href="#contacto" class="mobile-link block rounded-2xl px-4 py-3 hover:bg-lavanda-mist transition">Contacto</a></li>
+          <li class="pt-2">
+            <a href="#contacto" class="mobile-link flex items-center justify-center gap-2 rounded-full bg-lavanda-deep px-5 py-3 text-sm font-medium text-lino">
+              <i data-lucide="map-pin" class="h-4 w-4"></i> Visítanos / Pedidos
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section id="inicio" class="relative overflow-hidden pt-36 pb-20 lg:pt-44 lg:pb-28">
+      <div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-lavanda-mist blur-3xl opacity-70"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-salvia-soft/50 blur-3xl"></div>
+
+      <div class="relative max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-14 items-center">
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 rounded-full border border-lavanda-soft bg-lavanda-mist/60 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-lavanda-deep">
+            <i data-lucide="sprout" class="h-3.5 w-3.5"></i> Herbolario artesanal
+          </span>
+          <h1 class="mt-6 font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.1] font-medium">
+            Donde la luna despierta la <span class="italic text-lavanda-deep">sabiduría</span> de las plantas
+          </h1>
+          <p class="mt-6 max-w-xl text-lg text-carbon/80">
+            Infusiones, ungüentos y tinturas elaborados a mano, a su ritmo, con hierbas recolectadas en armonía con los ciclos de la tierra. Un refugio para volver a lo esencial.
+          </p>
+          <div class="mt-9 flex flex-wrap gap-4">
+            <a href="#remedios" class="group inline-flex items-center gap-2 rounded-full bg-lavanda-deep px-7 py-3.5 text-sm font-medium text-lino shadow-suave transition hover:bg-lavanda hover:shadow-lift hover:-translate-y-0.5">
+              Descubrir remedios
+              <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-1"></i>
+            </a>
+            <a href="#talleres" class="inline-flex items-center gap-2 rounded-full border border-carbon/25 px-7 py-3.5 text-sm font-medium transition hover:border-lavanda-deep hover:bg-lavanda-mist/60">
+              <i data-lucide="calendar-heart" class="h-4 w-4"></i> Reservar un taller
+            </a>
+          </div>
+
+          <div class="mt-12 flex items-center gap-8 text-sm text-carbon/70">
+            <div><p class="font-serif text-3xl text-carbon">+120</p><p>Plantas medicinales</p></div>
+            <div class="h-10 w-px bg-carbon/20"></div>
+            <div><p class="font-serif text-3xl text-carbon">12</p><p>Años de oficio</p></div>
+            <div class="h-10 w-px bg-carbon/20"></div>
+            <div><p class="font-serif text-3xl text-carbon">100%</p><p>Hecho a mano</p></div>
+          </div>
+        </div>
+
+        <div class="relative reveal delay-2">
+          <!-- luna decorativa -->
+          <svg class="slowspin absolute -top-10 -right-6 h-32 w-32 text-terracota/40 hidden sm:block" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8">
+            <circle cx="50" cy="50" r="48"/><circle cx="50" cy="50" r="36" stroke-dasharray="2 4"/><circle cx="50" cy="50" r="24"/>
+            <path d="M50 2v96M2 50h96M16 16l68 68M84 16L16 84" opacity=".5"/>
+          </svg>
+
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            <div class="img-fallback overflow-hidden rounded-t-[12rem] rounded-b-[2.5rem] shadow-suave aspect-[4/5]">
+              <img src="https://images.unsplash.com/photo-1499002238440-d264edd596ec?auto=format&fit=crop&w=1000&q=80"
+                   alt="Campo de lavanda al atardecer" class="h-full w-full object-cover" loading="eager" onerror="this.style.display='none'" />
+            </div>
+
+            <div class="floaty absolute -bottom-6 -left-4 sm:-left-10 flex items-center gap-4 rounded-3xl bg-tarjeta/95 backdrop-blur border border-arena p-4 pr-6 shadow-suave">
+              <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-salvia-soft text-salvia-deep">
+                <i data-lucide="leaf" class="h-6 w-6"></i>
+              </span>
+              <div>
+                <p class="font-serif text-lg leading-tight">Cosecha de otoño</p>
+                <p class="text-xs text-carbon/70">Recién secada · Lote limitado</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divisor -->
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex items-center gap-4 text-terracota/60">
+        <div class="h-px flex-1 bg-arena"></div><i data-lucide="flower-2" class="h-5 w-5"></i><div class="h-px flex-1 bg-arena"></div>
+      </div>
+    </div>
+
+    <!-- ============ FILOSOFÍA ============ -->
+    <section id="filosofia" class="py-24 lg:py-32">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="mx-auto max-w-2xl text-center reveal">
+          <p class="text-xs font-medium uppercase tracking-[0.25em] text-terracota">Nuestra filosofía</p>
+          <h2 class="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl font-medium">Cuidar de ti es cuidar de la tierra</h2>
+          <p class="mt-5 text-carbon/75">Tres principios guían cada frasco, cada mezcla y cada consejo que compartimos en el mostrador.</p>
+        </div>
+
+        <div class="mt-16 grid gap-7 md:grid-cols-3">
+          <article class="group reveal rounded-[2rem] bg-tarjeta border border-arena p-9 shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-salvia-soft text-salvia-deep transition group-hover:scale-110 group-hover:rotate-3">
+              <i data-lucide="hand-heart" class="h-7 w-7"></i>
+            </span>
+            <h3 class="mt-7 font-serif text-2xl">Recolección ética</h3>
+            <p class="mt-3 text-carbon/75">Recogemos solo lo necesario, respetando las épocas de cada planta y dejando siempre que el monte se regenere. Trabajamos con pequeños productores locales.</p>
+          </article>
+
+          <article class="group reveal delay-1 rounded-[2rem] bg-tarjeta border border-arena p-9 shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-lavanda-mist text-lavanda-deep transition group-hover:scale-110 group-hover:rotate-3">
+              <i data-lucide="book-open" class="h-7 w-7"></i>
+            </span>
+            <h3 class="mt-7 font-serif text-2xl">Herbolaria tradicional</h3>
+            <p class="mt-3 text-carbon/75">Recetas heredadas de generaciones, contrastadas con el conocimiento actual. Maceramos, secamos y destilamos con métodos lentos y artesanales.</p>
+          </article>
+
+          <article class="group reveal delay-2 rounded-[2rem] bg-tarjeta border border-arena p-9 shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-terracota-soft text-terracota transition group-hover:scale-110 group-hover:rotate-3">
+              <i data-lucide="heart-pulse" class="h-7 w-7"></i>
+            </span>
+            <h3 class="mt-7 font-serif text-2xl">Bienestar holístico</h3>
+            <p class="mt-3 text-carbon/75">Entendemos la salud como un equilibrio entre cuerpo, mente y entorno. Te acompañamos con rituales sencillos que caben en tu día a día.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTOS ============ -->
+    <section id="remedios" class="py-24 lg:py-32 bg-crema">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
+          <div class="max-w-xl">
+            <p class="text-xs font-medium uppercase tracking-[0.25em] text-terracota">Remedios de la casa</p>
+            <h2 class="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl font-medium">Especialidades destacadas</h2>
+          </div>
+          <p class="max-w-sm text-carbon/75">Pequeñas tandas elaboradas bajo las fases lunares. Precios orientativos, consulta disponibilidad en tienda.</p>
+        </div>
+
+        <div class="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Producto 1 -->
+          <article class="group reveal flex flex-col rounded-[1.75rem] bg-tarjeta border border-arena overflow-hidden shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <div class="zoom-img img-fallback relative aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=700&q=80" alt="Infusión de hierbas secas" class="h-full w-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+              <span class="absolute left-4 top-4 rounded-full bg-lino/90 px-3 py-1 text-xs font-medium text-lavanda-deep">Más vendido</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <h3 class="font-serif text-xl">Infusión Luna Llena</h3>
+              <p class="mt-2 flex-1 text-sm text-carbon/70">Pasiflora, melisa y flor de azahar para un descanso profundo.</p>
+              <div class="mt-5 flex items-center justify-between">
+                <p class="font-serif text-2xl text-lavanda-deep">9,50 €</p>
+                <button class="detail-btn inline-flex items-center gap-1.5 rounded-full border border-carbon/20 px-4 py-2 text-xs font-medium transition hover:border-lavanda-deep hover:bg-lavanda-deep hover:text-lino" data-name="Infusión Luna Llena">
+                  Detalle <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Producto 2 -->
+          <article class="group reveal delay-1 flex flex-col rounded-[1.75rem] bg-tarjeta border border-arena overflow-hidden shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <div class="zoom-img img-fallback relative aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=700&q=80" alt="Bálsamo artesanal con flores" class="h-full w-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+              <span class="absolute left-4 top-4 rounded-full bg-lino/90 px-3 py-1 text-xs font-medium text-terracota">Artesanal</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <h3 class="font-serif text-xl">Ungüento de Caléndula</h3>
+              <p class="mt-2 flex-1 text-sm text-carbon/70">Caléndula y cera de abeja macerada en aceite de oliva. Calma y nutre la piel.</p>
+              <div class="mt-5 flex items-center justify-between">
+                <p class="font-serif text-2xl text-lavanda-deep">14,00 €</p>
+                <button class="detail-btn inline-flex items-center gap-1.5 rounded-full border border-carbon/20 px-4 py-2 text-xs font-medium transition hover:border-lavanda-deep hover:bg-lavanda-deep hover:text-lino" data-name="Ungüento de Caléndula">
+                  Detalle <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Producto 3 -->
+          <article class="group reveal delay-2 flex flex-col rounded-[1.75rem] bg-tarjeta border border-arena overflow-hidden shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <div class="zoom-img img-fallback relative aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=700&q=80" alt="Flores y hierbas para tinturas" class="h-full w-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+              <span class="absolute left-4 top-4 rounded-full bg-lino/90 px-3 py-1 text-xs font-medium text-salvia-deep">Tintura madre</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <h3 class="font-serif text-xl">Tintura de Valeriana</h3>
+              <p class="mt-2 flex-1 text-sm text-carbon/70">Extracto hidroalcohólico de raíz, macerado 6 semanas. Frasco de 50 ml.</p>
+              <div class="mt-5 flex items-center justify-between">
+                <p class="font-serif text-2xl text-lavanda-deep">18,50 €</p>
+                <button class="detail-btn inline-flex items-center gap-1.5 rounded-full border border-carbon/20 px-4 py-2 text-xs font-medium transition hover:border-lavanda-deep hover:bg-lavanda-deep hover:text-lino" data-name="Tintura de Valeriana">
+                  Detalle <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Producto 4 -->
+          <article class="group reveal delay-3 flex flex-col rounded-[1.75rem] bg-tarjeta border border-arena overflow-hidden shadow-suave transition duration-500 hover:-translate-y-2 hover:shadow-lift">
+            <div class="zoom-img img-fallback relative aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=700&q=80" alt="Lavanda seca en manojos" class="h-full w-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+              <span class="absolute left-4 top-4 rounded-full bg-lino/90 px-3 py-1 text-xs font-medium text-lavanda-deep">Edición limitada</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <h3 class="font-serif text-xl">Sales de Baño Floral</h3>
+              <p class="mt-2 flex-1 text-sm text-carbon/70">Sal marina, lavanda y pétalos de rosa para un ritual de calma nocturno.</p>
+              <div class="mt-5 flex items-center justify-between">
+                <p class="font-serif text-2xl text-lavanda-deep">12,00 €</p>
+                <button class="detail-btn inline-flex items-center gap-1.5 rounded-full border border-carbon/20 px-4 py-2 text-xs font-medium transition hover:border-lavanda-deep hover:bg-lavanda-deep hover:text-lino" data-name="Sales de Baño Floral">
+                  Detalle <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="mt-10 text-center text-xs text-carbon/60">Los productos herbolarios no sustituyen el consejo médico profesional.</p>
+      </div>
+    </section>
+
+    <!-- ============ TALLER / CONSULTA ============ -->
+    <section id="talleres" class="py-24 lg:py-32">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="reveal relative overflow-hidden rounded-[2.5rem] bg-lavanda-deep text-lino">
+          <div class="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-lavanda/50 blur-2xl"></div>
+          <div class="absolute -bottom-24 left-1/3 h-72 w-72 rounded-full bg-terracota/30 blur-3xl"></div>
+
+          <div class="relative grid lg:grid-cols-2 items-center">
+            <div class="p-10 sm:p-14 lg:p-16">
+              <p class="text-xs font-medium uppercase tracking-[0.25em] text-lavanda-mist">Talleres &amp; consultas</p>
+              <h2 class="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl font-medium leading-tight">Aprende a hablar el idioma de las plantas</h2>
+              <p class="mt-5 max-w-lg text-lino/85">Talleres de fitoterapia en grupos reducidos y consultas personalizadas para crear tu propio botiquín natural, paso a paso y sin prisa.</p>
+
+              <ul class="mt-8 space-y-3 text-sm">
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="h-5 w-5 text-salvia-soft"></i> Taller mensual de tinturas y macerados (grupos de 8)</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="h-5 w-5 text-salvia-soft"></i> Consulta individual de 45 min con herbolarista</li>
+                <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="h-5 w-5 text-salvia-soft"></i> Materiales y té de bienvenida incluidos</li>
+              </ul>
+
+              <div class="mt-10 flex flex-wrap gap-4">
+                <a href="https://wa.me/34600000000?text=Hola%20Luna%20Roja%2C%20quiero%20reservar%20un%20taller" target="_blank" rel="noopener" class="group inline-flex items-center gap-2 rounded-full bg-lino px-7 py-3.5 text-sm font-medium text-lavanda-deep transition hover:bg-arena hover:-translate-y-0.5">
+                  Reservar plaza <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-1"></i>
+                </a>
+                <a href="#faq" class="inline-flex items-center gap-2 rounded-full border border-lino/40 px-7 py-3.5 text-sm font-medium transition hover:bg-lino/10">Ver preguntas frecuentes</a>
+              </div>
+            </div>
+
+            <div class="relative hidden lg:block h-full min-h-[460px] img-fallback">
+              <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1000&q=80" alt="Manos preparando hierbas medicinales" class="absolute inset-0 h-full w-full object-cover opacity-90" loading="lazy" onerror="this.style.display='none'" />
+              <div class="absolute inset-0 bg-gradient-to-r from-lavanda-deep via-lavanda-deep/20 to-transparent"></div>
+              <div class="absolute bottom-8 right-8 rounded-2xl bg-lino/95 p-5 text-carbon shadow-suave">
+                <p class="text-xs uppercase tracking-widest text-terracota">Próximo taller</p>
+                <p class="mt-1 font-serif text-xl">Sábado 24 de octubre</p>
+                <p class="text-sm text-carbon/70">11:00 · Quedan 3 plazas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIOS ============ -->
+    <section class="py-24 lg:py-28 bg-crema">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="mx-auto max-w-2xl text-center reveal">
+          <p class="text-xs font-medium uppercase tracking-[0.25em] text-terracota">Voces de la comunidad</p>
+          <h2 class="mt-4 font-serif text-3xl sm:text-4xl lg:text-5xl font-medium">Lo que cuentan quienes nos visitan</h2>
+        </div>
+
+        <div class="mt-14 grid gap-7 md:grid-cols-3">
+          <figure class="reveal rounded-[2rem] bg-tarjeta border border-arena p-8 shadow-suave transition duration-500 hover:-translate-y-1.5 hover:shadow-lift">
+            <i data-lucide="quote" class="h-8 w-8 text-lavanda-soft"></i>
+            <blockquote class="mt-4 font-serif text-lg italic leading-relaxed">Desde que tomo la infusión Luna Llena, mis noches son otras. Y la atención en la tienda es puro cariño.</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-lavanda-mist font-serif text-lavanda-deep">M</span>
+              <div><p class="text-sm font-medium">María Ortega</p><p class="text-xs text-carbon/60">Clienta desde 2021</p></div>
+            </figcaption>
+          </figure>
+
+          <figure class="reveal delay-1 rounded-[2rem] bg-tarjeta border border-arena p-8 shadow-suave transition duration-500 hover:-translate-y-1.5 hover:shadow-lift">
+            <i data-lucide="quote" class="h-8 w-8 text-salvia"></i>
+            <blockquote class="mt-4 font-serif text-lg italic leading-relaxed">El taller de tinturas fue una revelación. Salí con mi primer frasco y con ganas de aprender mucho más.</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-salvia-soft font-serif text-salvia-deep">J</span>
+              <div><p class="text-sm font-medium">Julián Rivas</p><p class="text-xs text-carbon/60">Asistente a talleres</p></div>
+            </figcaption>
+          </figure>
+
+          <figure class="reveal delay-2 rounded-[2rem] bg-tarjeta border border-arena p-8 shadow-suave transition duration-500 hover:-translate-y-1.5 hover:shadow-lift">
+            <i data-lucide="quote" class="h-8 w-8 text-terracota"></i>
+            <blockquote class="mt-4 font-serif text-lg italic leading-relaxed">El ungüento de caléndula es mágico para mi piel sensible. Se nota el mimo en cada detalle, hasta en el envoltorio.</blockquote>
+            <figcaption class="mt-6 flex items-center gap-3">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-terracota-soft font-serif text-terracota">C</span>
+              <div><p class="text-sm font-medium">Clara Benítez</p><p class="text-xs text-carbon/60">Clienta habitual</p></div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" class="py-24 lg:py-28">
+      <div class="max-w-3xl mx-auto px-5 sm:px-8">
+        <div class="text-center reveal">
+          <p class="text-xs font-medium uppercase tracking-[0.25em] text-terracota">Dudas habituales</p>
+          <h2 class="mt-4 font-serif text-3xl sm:text-4xl font-medium">Preguntas frecuentes</h2>
+        </div>
+
+        <div class="mt-12 space-y-4 reveal">
+          <div class="faq-item rounded-3xl bg-tarjeta border border-arena shadow-suave overflow-hidden">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-6 text-left font-serif text-lg" aria-expanded="false">
+              ¿Necesito reservar para los talleres?
+              <i data-lucide="plus" class="faq-icon h-5 w-5 shrink-0 text-lavanda-deep transition-transform duration-300"></i>
+            </button>
+            <div class="faq-body"><div><p class="px-6 pb-6 text-carbon/75">Sí, las plazas son limitadas para garantizar una atención cercana. Puedes reservar por WhatsApp o en la tienda.</p></div></div>
+          </div>
+
+          <div class="faq-item rounded-3xl bg-tarjeta border border-arena shadow-suave overflow-hidden">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-6 text-left font-serif text-lg" aria-expanded="false">
+              ¿Hacéis envíos?
+              <i data-lucide="plus" class="faq-icon h-5 w-5 shrink-0 text-lavanda-deep transition-transform duration-300"></i>
+            </button>
+            <div class="faq-body"><div><p class="px-6 pb-6 text-carbon/75">Enviamos a toda la península en 48-72 h con embalaje compostable. También puedes recoger tu pedido en tienda sin coste.</p></div></div>
+          </div>
+
+          <div class="faq-item rounded-3xl bg-tarjeta border border-arena shadow-suave overflow-hidden">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-6 text-left font-serif text-lg" aria-expanded="false">
+              ¿Son seguros durante el embarazo o con medicación?
+              <i data-lucide="plus" class="faq-icon h-5 w-5 shrink-0 text-lavanda-deep transition-transform duration-300"></i>
+            </button>
+            <div class="faq-body"><div><p class="px-6 pb-6 text-carbon/75">Algunas plantas no son recomendables en esos casos. Consulta siempre con tu profesional sanitario y, si quieres, con nuestra herbolarista en una consulta personalizada.</p></div></div>
+          </div>
+
+          <div class="faq-item rounded-3xl bg-tarjeta border border-arena shadow-suave overflow-hidden">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-6 text-left font-serif text-lg" aria-expanded="false">
+              ¿De dónde provienen vuestras plantas?
+              <i data-lucide="plus" class="faq-icon h-5 w-5 shrink-0 text-lavanda-deep transition-transform duration-300"></i>
+            </button>
+            <div class="faq-body"><div><p class="px-6 pb-6 text-carbon/75">De cultivos ecológicos locales y de recolección silvestre responsable, siempre con permisos y respetando las épocas de cada especie.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contacto" class="bg-carbon text-lino/85">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-10">
+      <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div class="lg:col-span-1">
+          <a href="#inicio" class="flex items-center gap-2.5">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-terracota/25"><i data-lucide="moon" class="h-5 w-5 text-terracota-soft"></i></span>
+            <span class="font-serif text-2xl text-lino">Luna <span class="italic text-terracota-soft">Roja</span></span>
+          </a>
+          <p class="mt-5 text-sm text-lino/70">Herbolario artesanal. Sabiduría botánica ancestral para el bienestar de hoy.</p>
+          <div class="mt-6 flex gap-3">
+            <a href="#" aria-label="Instagram" class="flex h-10 w-10 items-center justify-center rounded-full border border-lino/20 transition hover:bg-lavanda-deep hover:border-lavanda-deep"><i data-lucide="instagram" class="h-4 w-4"></i></a>
+            <a href="#" aria-label="Facebook" class="flex h-10 w-10 items-center justify-center rounded-full border border-lino/20 transition hover:bg-lavanda-deep hover:border-lavanda-deep"><i data-lucide="facebook" class="h-4 w-4"></i></a>
+            <a href="#" aria-label="YouTube" class="flex h-10 w-10 items-center justify-center rounded-full border border-lino/20 transition hover:bg-lavanda-deep hover:border-lavanda-deep"><i data-lucide="youtube" class="h-4 w-4"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-lg text-lino">Horarios</h4>
+          <ul class="mt-5 space-y-2 text-sm">
+            <li class="flex justify-between gap-6"><span>Lunes – Viernes</span><span>10:00 – 14:00 · 17:00 – 20:30</span></li>
+            <li class="flex justify-between gap-6"><span>Sábados</span><span>10:00 – 14:30</span></li>
+            <li class="flex justify-between gap-6"><span>Domingos</span><span>Cerrado</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-lg text-lino">Encuéntranos</h4>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li class="flex gap-3"><i data-lucide="map-pin" class="h-5 w-5 shrink-0 text-terracota-soft"></i> Calle del Romero, 14<br />08000 · Ciudad Ficticia</li>
+            <li class="flex gap-3"><i data-lucide="mail" class="h-5 w-5 shrink-0 text-terracota-soft"></i> hola@lunaroja.example</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif text-lg text-lino">Pedidos por WhatsApp</h4>
+          <p class="mt-5 text-sm text-lino/70">Escríbenos para encargos, dudas o reservas de talleres.</p>
+          <a href="https://wa.me/34600000000?text=Hola%20Luna%20Roja" target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 rounded-full bg-salvia px-6 py-3 text-sm font-medium text-carbon transition hover:bg-salvia-soft hover:-translate-y-0.5">
+            <i data-lucide="message-circle" class="h-4 w-4"></i> Abrir WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-16 border-t border-lino/15 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-lino/60">
+        <p>© <span id="year"></span> Luna Roja Herbolario. Todos los derechos reservados.</p>
+        <div class="flex flex-wrap gap-5">
+          <a href="#" class="hover:text-lino transition">Aviso legal</a>
+          <a href="#" class="hover:text-lino transition">Política de privacidad</a>
+          <a href="#" class="hover:text-lino transition">Cookies</a>
+        </div>
+      </div>
+      <p class="mt-6 max-w-3xl text-[11px] leading-relaxed text-lino/45">Aviso: los productos de herbolario son complementos tradicionales y no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad. Ante cualquier duda de salud, consulta con un profesional sanitario. Dirección y datos de contacto ficticios con fines de demostración.</p>
+    </div>
+  </footer>
+
+  <!-- Toast de detalle de producto -->
+  <div id="toast" class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-500 rounded-full bg-carbon px-6 py-3 text-sm text-lino shadow-suave pointer-events-none"></div>
+
+  <script>
+    // Iconos
+    lucide.createIcons();
+
+    // Año del footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Menú móvil
+    const menuBtn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+
+    function setMenu(open) {
+      menu.classList.toggle('open', open);
+      iconOpen.classList.toggle('hidden', open);
+      iconClose.classList.toggle('hidden', !open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+    }
+    menuBtn.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => setMenu(false)));
+    window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setMenu(false); });
+
+    // Revelado al hacer scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Acordeón FAQ
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+
+    // Toast simulado para botones de detalle
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    document.querySelectorAll('.detail-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        toast.textContent = btn.dataset.name + ' · Consulta disponibilidad en tienda o por WhatsApp';
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3200);
+      });
+    });
+  </script>
+</body>
+</html>
